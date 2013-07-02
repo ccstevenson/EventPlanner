@@ -1,0 +1,11 @@
+﻿@model YelpSharp.Data.SearchResults
+@{
+    Layout = null;
+}
+<div class="results">
+    
+    @foreach (var b in @Model.businesses)
+        {
+            <input type="checkbox" name="Restaurants" value="@b.id" />@Html.Partial("BusinessCard", b)
+        }
+</div>

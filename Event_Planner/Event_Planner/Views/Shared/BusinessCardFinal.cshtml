@@ -1,0 +1,11 @@
+﻿@model Event_Planner.Models.RestaurantModel
+
+<fieldset>
+    <legend>@Model.YelpData.name</legend>
+    <img src="@Model.YelpData.image_url" />
+    <img src="@Model.YelpData.rating_img_url_small" />
+    @Model.YelpData.location.address[0]<br />
+    "@Model.YelpData.snippet_text"
+    <a href="@Model.YelpData.url" target="_blank">Listing on Yelp</a>
+    <div>Start: @Model.StartTime.ToString() End: @Model.EndTime.ToString()</div>
+</fieldset>

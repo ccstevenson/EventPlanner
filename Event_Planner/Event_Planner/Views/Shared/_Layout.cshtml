@@ -1,0 +1,53 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+        <meta name="viewport" content="width=device-width" />
+        <link href="~/Content/Site.css" type="text/css" rel="stylesheet" />
+        @Styles.Render("~/Content/css")
+        @Scripts.Render("~/bundles/modernizr")
+    </head>
+    <body>
+        <div class="boxed">
+            <div class="content-wrapper">
+              
+                    <div class="title">Event Planner</div>
+                    <nav>
+                        <h1>
+                       @if (ViewBag.Page != "Home")
+                       {
+                            @Html.ActionLink("Home", "Index", "Home")
+                       }                           
+                       @if (ViewBag.Page != "About")
+                       {
+                            @Html.ActionLink("About", "About", "Home")
+                       } 
+                          @if (ViewBag.Page != "Contact")
+                       {
+                            @Html.ActionLink("Contact", "Contact", "Home")
+                       }                        
+                         </h1>
+                        
+                    </nav>
+          </div>
+    </div>
+    <div id="content">
+            @RenderSection("featured", required: false)
+            <section class="content-wrapper main-content clear-fix">
+                @RenderBody()
+            </section>
+        </div>
+        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    @*<p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>*@
+                </div>
+            </div>
+        </footer>
+
+        @Scripts.Render("~/bundles/jquery")
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

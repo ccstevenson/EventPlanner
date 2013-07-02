@@ -1,0 +1,10 @@
+﻿@model YelpSharp.Data.Business
+
+<fieldset>
+    <legend>@Model.name</legend>
+    <img src="@Model.image_url" />
+    <img src="@Model.rating_img_url_small" />
+    @Model.location.address[0]<br />
+    "@Model.snippet_text"
+    <a href="@Model.url" target="_blank">Listing on Yelp</a>
+</fieldset>

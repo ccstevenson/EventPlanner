@@ -1,0 +1,47 @@
+﻿@model Event_Planner.Models.EventModel
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<html>
+<head>
+    <title>Model.Business.Name</title>
+    <style type="text/css" media="screen">
+        body {
+            background-color: #fff;
+            border-top: solid 10px #000;
+            color: #333;
+            font-size: .85em;
+            font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        div.Header {
+            background-color: #7ac0da;
+            color: #fff;
+        }
+
+        h2 {
+            margin-left: 15px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="Header">
+            <h2>Event: @Model.Name</h2>
+        </div>
+
+        <p />
+        <div style="background: #efeeef; border: 2px #787878 solid; margin: 20px; padding: 6px;">
+            @foreach (var b in Model.RestaurantModel)
+            {
+                @Html.Partial("BusinessCardFinal", b)
+            }
+        </div>
+    </div>
+</body>
+</html>

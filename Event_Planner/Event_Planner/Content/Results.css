@@ -1,0 +1,46 @@
+﻿body {
+    background-color: #fff;
+    border-top: solid 10px #000;
+    color: #333;
+    font-size: .85em;
+    font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+    margin: 0;
+    padding: 0;
+}
+
+td {
+    border: 2px solid #787878;
+    background-color: #efeeef;
+}
+
+div.Card {
+    background-color: #fff;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+div.Header {
+    background-color: #7ac0da;
+    color: #fff;
+}
+
+h2 {
+    margin-left: 15px;
+    font-weight: normal;
+}
+
+table {
+    border-spacing: 10px;
+}
+
+div.FinalTimes {
+    background-color: #fff;
+    border: 2px solid #7ac0da;
+    margin: 10px;
+    padding: 5px;
+}
+
+input.TimeBox {
+    margin-left: 11px;
+    margin-bottom: 15px;
+}

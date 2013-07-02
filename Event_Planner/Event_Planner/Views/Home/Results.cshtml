@@ -1,0 +1,283 @@
+﻿@model Event_Planner.Models.ResultsViewModel
+
+@{
+    Layout = null;
+}
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+@Styles.Render("~/Content/themes/base/css")
+
+<!DOCTYPE html>
+
+<!-- Use CSS later for obsolete attributes -->
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Results</title>
+    
+        <script type="text/javascript" src="~/Scripts/jquery-ui-timepicker-addon.js"></script>
+        <script type="text/javascript">
+            function boxChecked(cb) {
+            
+                var column = document.getElementById("SecondColumn");
+                               
+                var id = cb.name;
+            
+                if (cb.checked) {
+                    var val = cb.value;
+
+                    // The div holding the business card will have an id with the name of the event followed by the city it's located in.
+                    // Ex., id="boudreauxs-bistro-payson"
+                    column.innerHTML += "<div class=\"Col2Card\" id =\"" + id + "\">" + val + "</div>";
+                
+                    // The IDs for accessing the text boxes are 'id + "start"' and 'id + "end"'.
+                    column.innerHTML += "<input type=\"text\" class=\"TimeBox\" name=\"startTime\" value=\"Start Time\" id=\"" + id + "start\">";
+                    column.innerHTML += "<input type=\"text\" class=\"TimeBox:\" name=\"endTime\" value=\"End Time\" id=\"" + id + "end\">";
+                    column.innerHTML += "<button type=\"button\" id=\"" + id + "button\" onclick=\"timesEntered(this)\">Confirm</button>";
+                    $('#' + id + 'start').datetimepicker();
+                    $('#' + id + 'end').datetimepicker();
+                } else {
+                    secondColumnRemove(id);
+                }
+            }
+        
+            function secondColumnRemove(id) {
+                
+                var divToRemove = document.getElementById(id);
+                while (divToRemove != null) {
+                    divToRemove.parentNode.removeChild(divToRemove); // DOM requires you to go to the parent before removing an element.
+                    divToRemove = document.getElementById(id);
+                }
+
+                var startBoxToRemove = document.getElementById(id + "start");
+                while (startBoxToRemove != null) {
+                    startBoxToRemove.parentNode.removeChild(startBoxToRemove);
+                    startBoxToRemove = document.getElementById(id + "start");
+                }
+                
+                var endBoxToRemove = document.getElementById(id + "end");
+                while (endBoxToRemove != null) {
+                    endBoxToRemove.parentNode.removeChild(endBoxToRemove);
+                    endBoxToRemove = document.getElementById(id + "end");
+                }
+                
+                var buttonToRemove = document.getElementById(id + "button");
+                while (buttonToRemove != null) {
+                    buttonToRemove.parentNode.removeChild(buttonToRemove);
+                    buttonToRemove = document.getElementById(id + "button");
+                }
+            }
+        
+            function timesEntered(button) {
+                var column = document.getElementById("ThirdColumn");
+                
+                // buttonId is the ID + "button"
+                var buttonId = button.id;
+                
+                // Remove "button" from the end of the ID. This yields the id of the div in the second column which contains the business card.
+                var id = buttonId.substring(0, buttonId.length - 6);
+                
+                // The only item with this id is the "Business Card" in the second column.
+                var content = document.getElementById(id);
+                // Move the card to the third column.
+                
+                column.appendChild(content);
+                // Change the id so that it's not deleted from the third column every time it's deleted from the second.
+                content.id = id + "in-third";
+                content.setAttribute("class", "Col3Card");
+
+                var startTime = document.getElementById(id + "start").value;
+                var endTime = document.getElementById(id + "end").value;
+
+                column.innerHTML += "<div name=\"Times\" class=\"FinalTimes\"> Start time: <div name=\"start\">" + startTime + "</div><br /> End time: <div name=\"end\">" + endTime + "</div></div>";
+
+                secondColumnRemove(id);
+            }
+            function eventSaveError(element, message) {
+                element.setAttribute("class","error");
+                element.innerHTML = "<h4><font color=\"red\">" + message + "</font></h4>";
+                if (console) console.log(message);
+                return;
+            }
+            function eventSave() {
+                var error = document.getElementById("SaveError");
+                var Name = document.getElementById("eventName");
+
+                if (console) console.log("Name: " + Name.value);
+
+                if (Name.value == "") {
+                    eventSaveError(error, "Please enter a name for the event.");
+                    return;
+                }
+
+                var businesses = document.getElementsByClassName("Col3Card");
+                if (businesses.length < 1) {
+                    eventSaveError(error, "Please select at least one event locations.");
+                    return;
+                }
+
+                if (console) console.log("businesses: " + businesses);
+
+                var businessCards = new Array();
+
+                for (var i = 0; i < businesses.length; i++) {
+                    var business = businesses[i];
+                    if (console) console.log("loop");
+                    businessCard = new Object();
+                    if (console) console.log(business);
+                    businessCard.Id = business.id.slice(0, -8);
+                    businessCard.start = document.getElementsByName("start")[i].innerHTML;
+                    businessCard.end = document.getElementsByName("end")[i].innerHTML;
+                    businessCards.push(businessCard);
+                }
+
+                if (console) console.log("business: " + businessCards);
+
+                var finalEvent = new Object();
+                finalEvent.Name = Name.value;
+                finalEvent.Restaurants = businessCards;
+
+                var request = new XMLHttpRequest();
+                request.open("POST", "/Event/SaveEvent", true);
+                request.setRequestHeader("Content-Type", "application/json");
+                error.innerHTML = "";
+                request.onreadystatechange = function () {
+                    if (request.readyState == 4) {
+                        if (console) console.log(request.responseText);
+                        if(request.status == 200) {
+                            document.location.href = request.responseText;
+                        }
+                        else {
+                            eventSaveError(error, request.responseText);
+                        }
+                    }
+                }
+              
+                request.send(JSON.stringify(finalEvent));
+                if (console) console.log(JSON.stringify(finalEvent));
+            }
+                    
+
+                    
+
+
+        
+        </script>
+        
+        <style type="text/css" media="screen">
+            body {
+                background-color: #fff;
+                border-top: solid 10px #000;
+                color: #333;
+                font-size: .85em;
+                font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            td {
+                border: 2px solid #787878;
+                background-color: #efeeef;
+            }
+
+            div.Card {
+                background-color: #fff;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            div.Header {
+                background-color: #7ac0da;
+                color: #fff;
+            }
+
+            h2 {
+                margin-left: 15px;
+                font-weight: normal;
+            }
+
+            table {
+                border-spacing: 10px;
+            }
+
+            div.FinalTimes {
+                background-color: #fff;
+                border: 2px solid #7ac0da;
+                margin: 10px;
+                padding: 5px;
+            }
+
+            input.TimeBox {
+                margin-left: 11px;
+                margin-bottom: 15px;
+            }
+
+            /* css for timepicker */
+            .ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+            .ui-timepicker-div dl { text-align: left; }
+            .ui-timepicker-div dl dt { height: 25px; margin-bottom: -25px; }
+            .ui-timepicker-div dl dd { margin: 0 10px 10px 65px; }
+            .ui-timepicker-div td { font-size: 90%; }
+            .ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+            .ui-timepicker-rtl{ direction: rtl; }
+            .ui-timepicker-rtl dl { text-align: right; }
+            .ui-timepicker-rtl dl dd { margin: 0 65px 10px 10px; }
+        </style>
+        
+        <!--Works locally, but not working in AppHarbor-->
+        <!--<link href="ADDATSIGNHEREUrl.Content("~/Content/Results.css")" rel="stylesheet" type="text/css" />-->
+    </head>
+    
+    <body>
+        <div>
+            <div class="Header">
+                <h2>Results for zip code @Model.Query.Zip:</h2>  
+            </div>
+ 
+        
+            <table>
+                <tr>
+                <td width="1000px">
+                    
+                    @foreach (var b in @Model.SearchResults.businesses)
+                    {
+                        <input type="checkbox" class="MoveToSecondColumn" name="@b.id" value="@Html.Partial("BusinessCard", b)" onchange="boxChecked(this);"/>
+                        <div class="Card">
+                            @Html.Partial("BusinessCard", b)
+                        </div>
+                    }
+             
+                </td>
+
+                <td id="SecondColumn" valign="top" width="1000px"> </td>
+
+                <td id="ThirdColumn" valign="top" width="1000px">
+                    
+                    <!--<p>To do:</p>
+                    <ul>
+                        <li>Make these itinerary events deletable and editable.</li>
+                        <li>May want to sort by start time.</li>
+                        <li>Also want a friendlier text box for time entry in the second column. Dropdown?</li>
+                        <li>Need a way (a button above/below this column) to save the itinerary to a user-specific database. This will allow for sharing.</li>
+                    </ul>-->
+                    <div id="Save">
+                        <div class="HiddenError" id="SaveError">
+
+                            
+                        </div>
+                        <form action="javascript:eventSave()">
+
+                           Event Name <input type="text" id="eventName" name="eventName"/><input type="submit" value="Save"/>
+
+                        </form>
+                    </div><br />
+                     
+                </td>
+            </tr>
+            </table>
+
+        </div>
+    </body>
+</html>

@@ -1,0 +1,1 @@
+This is a group project for UVU's CS 2450 course. My contributions included the client-side JavaScript and integrating that logic with the C# back end. 
