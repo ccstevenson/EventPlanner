@@ -1,1 +1,1 @@
-This is a group project for a software engineering course. It is an MVC project written in C# and JavaScript. My contributions included the client-side JavaScript and integrating that logic with the C# back end. Most of this logic resides in Results.cshtml.
+This is a group project for a software engineering course. It is an MVC project written in C# and JavaScript. My contributions included the client-side JavaScript and integrating that logic with the C# back end, as well as designing and implementing the interface. The bulk of this code resides in Results.cshtml.
